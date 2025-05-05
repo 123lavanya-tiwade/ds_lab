@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+typedef struct {
+    int items[MAX];
+    int front, rear;
+    int capacity;
+} Queue;
+
+// Initialize queue
+void initQueue(Queue *q, int capacity) {
+    q->front = -1;
+    q->rear = -1;
+    q->capacity = capacity;
+}
+
+// Check if queue is empty
+int isEmpty(Queue *q) {
+    return (q->front == -1);
+}
+
+// Check if queue is full
+int isFull(Queue *q) {
+    return ((q->rear + 1) % q->capacity == q->front);
+}
+
+// Enqueue operation
+void enqueue(Queue *q, int value) {
+    if (isFull(q)) {
+        printf("Queue Overload! Cannot enqueue %d\n", value);
+    } else {
+        if (q->front == -1) q->front = 0;
+        q->rear = (q->rear + 1) % q->capacity;
+        q->items[q->rear] = value;
+        printf("Enqueued: %d\n", value);
+    }
+}
+
+// Dequeue operation
+void dequeue(Queue *q) {
+    if (isEmpty(q)) {
+        printf("Queue Underload! Cannot dequeue.\n");
+    } else {
+        printf("Dequeued: %d\n", q->items[q->front]);
+        if (q->front == q->rear) {
+            // Queue becomes empty
+            q->front = q->rear = -1;
+        } else {
+            q->front = (q->front + 1) % q->capacity;
+        }
+    }
+}
+
+// Traverse the queue
+void traverse(Queue *q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty.\n");
+    } else {
+        printf("Queue contents: ");
+        int i = q->front;
+        while (1) {
+            printf("%d ", q->items[i]);
+            if (i == q->rear) break;
+            i = (i + 1) % q->capacity;
+        }
+        printf("\n");
+    }
+}
+
+// Evaluate queue management and performance
+void evaluatePerformance(Queue *q) {
+    printf("\n--- Queue Management Evaluation ---\n");
+    if (isEmpty(q))
+        printf("Queue is empty.\n");
+    else
+        printf("Current size: %d\n", (q->rear >= q->front) ? (q->rear - q->front + 1) : (q->capacity - q->front + q->rear + 1));
+    
+    printf("Is Full: %s\n", isFull(q) ? "Yes" : "No");
+    printf("Is Empty: %s\n", isEmpty(q) ? "Yes" : "No");
+    printf("Available Capacity: %d\n", q->capacity - ((q->rear >= q->front) ? (q->rear - q->front + 1) : (q->capacity - q->front + q->rear + 1)));
+}
+
+void menu() {
+    printf("\n--- Queue Operations Menu ---\n");
+    printf("1. Enqueue\n");
+    printf("2. Dequeue\n");
+    printf("3. Traverse Queue\n");
+    printf("4. Evaluate Queue Management and Performance\n");
+    printf("5. Exit\n");
+}
+
+int main() {
+    Queue q;
+    int capacity;
+    printf("Enter capacity of the queue (max %d): ", MAX);
+    scanf("%d", &capacity);
+    if (capacity > MAX) {
+        printf("Capacity exceeds maximum limit (%d).\n", MAX);
+        return 1;
+    }
+
+    initQueue(&q, capacity);
+
+    int choice, value;
+    while (1) {
+        menu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to enqueue: ");
+                scanf("%d", &value);
+                enqueue(&q, value);
+                break;
+            case 2:
+                dequeue(&q);
+                break;
+            case 3:
+                traverse(&q);
+                break;
+            case 4:
+                evaluatePerformance(&q);
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+
+    return 0;
+}
