@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+typedef struct {
+    int items[MAX];
+    int top;
+    int capacity;
+} Stack;
+
+// Initialize the stack
+void initStack(Stack *s, int capacity) {
+    s->top = -1;
+    s->capacity = capacity;
+}
+
+// Check if the stack is empty
+int isEmpty(Stack *s) {
+    return (s->top == -1);
+}
+
+// Check if the stack is full
+int isFull(Stack *s) {
+    return (s->top == s->capacity - 1);
+}
+
+// Push operation
+void push(Stack *s, int value) {
+    if (isFull(s)) {
+        printf("Stack Overload! Cannot push %d\n", value);
+    } else {
+        s->items[++(s->top)] = value;
+        printf("Pushed: %d\n", value);
+    }
+}
+
+// Pop operation
+void pop(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Stack Underload! Cannot pop.\n");
+    } else {
+        printf("Popped: %d\n", s->items[(s->top)--]);
+    }
+}
+
+// Traverse the stack
+void traverse(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Stack is empty.\n");
+    } else {
+        printf("Stack contents (top to bottom): ");
+        for (int i = s->top; i >= 0; i--) {
+            printf("%d ", s->items[i]);
+        }
+        printf("\n");
+    }
+}
+
+// Analyze stack behavior and efficiency
+void analyzeStack(Stack *s) {
+    printf("\n--- Stack Analysis ---\n");
+    printf("Current size: %d\n", s->top + 1);
+    printf("Is Full: %s\n", isFull(s) ? "Yes" : "No");
+    printf("Is Empty: %s\n", isEmpty(s) ? "Yes" : "No");
+    printf("Available capacity: %d\n", s->capacity - (s->top + 1));
+}
+
+void menu() {
+    printf("\n--- Stack Operations Menu ---\n");
+    printf("1. Push\n");
+    printf("2. Pop\n");
+    printf("3. Traverse Stack\n");
+    printf("4. Analyze Stack Behavior and Efficiency\n");
+    printf("5. Exit\n");
+}
+
+int main() {
+    Stack s;
+    int capacity;
+    printf("Enter capacity of the stack (max %d): ", MAX);
+    scanf("%d", &capacity);
+    if (capacity > MAX) {
+        printf("Capacity exceeds maximum limit (%d).\n", MAX);
+        return 1;
+    }
+
+    initStack(&s, capacity);
+
+    int choice, value;
+    while (1) {
+        menu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to push: ");
+                scanf("%d", &value);
+                push(&s, value);
+                break;
+            case 2:
+                pop(&s);
+                break;
+            case 3:
+                traverse(&s);
+                break;
+            case 4:
+                analyzeStack(&s);
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+
+    return 0;
+}
