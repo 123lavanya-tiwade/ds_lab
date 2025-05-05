@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+// Structure for adjacency list node
+typedef struct node {
+    int vertex;
+    struct node* next;
+} *GNODE;
+
+GNODE graph[MAX];  // Adjacency list for graph
+int N = 0;         // Number of vertices
+
+void insertVertex(int* N) {
+    (*N)++;
+    graph[*N] = NULL;
+    printf("Vertex %d inserted.\n", *N);
+}
+
+void insertEdge(int* N) {
+    int s, d;
+    printf("Enter source : ");
+    scanf("%d", &s);
+    printf("Enter destination : ");
+    scanf("%d", &d);
+
+    if (s > *N || d > *N || s <= 0 || d <= 0) {
+        printf("Invalid edge.\n");
+        return;
+    }
+
+    GNODE q = (GNODE)malloc(sizeof(struct node));
+    q->vertex = d;
+    q->next = NULL;
+
+    if (graph[s] == NULL)
+        graph[s] = q;
+    else {
+        GNODE p = graph[s];
+        while (p->next != NULL)
+            p = p->next;
+        p->next = q;
+    }
+}
+
+void deleteVertex(int* N) {
+    int v;
+    printf("Enter the vertex to be deleted
